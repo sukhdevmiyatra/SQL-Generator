@@ -6,7 +6,7 @@ const App = () => {
 
   const getResponse = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/generate-sql`, {
+      const response = await fetch(`https://sql-generator-w634.vercel.app/generate-sql`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
