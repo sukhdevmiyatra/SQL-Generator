@@ -5,6 +5,11 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 
+var corsOptions = {
+  origin: 'https://sql-generator-gamma.vercel.app/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 dotenv.config();
 
 const app = express();
@@ -22,7 +27,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-app.post('/generate-sql', async (req, res) => {
+app.post('/generate-sql',cors(corsOptions), async (req, res) => {
   try {
     const userInput = req.body.userInput;
 
