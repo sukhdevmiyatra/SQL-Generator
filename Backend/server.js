@@ -5,6 +5,15 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(morgan('dev'));
+
+
 var whitelist = ['https://sql-generator-gamma.vercel.app/']
 var corsOptions = {
   origin: function (origin, callback) {
@@ -16,13 +25,6 @@ var corsOptions = {
   }
 }
 
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(morgan('dev'));
 app.use(cors(corsOptions));
 
 const MODEL_NAME = 'models/text-bison-001';
