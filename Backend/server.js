@@ -34,9 +34,7 @@ app.post('/generate-sql', async (req, res) => {
       You are a SQL expert. You have to recreate the SQL query for text provided to you by user. '''Don't include any other explanation. and reply with please send SQL query if user has sent unrelated message, input or query'''
      
       User Has said:
-      ${userInput}
-
-      '''Begin Generating Only SQL Code:'''
+      ${userInput}  
     `;
 
     const result = await client.generateText({
