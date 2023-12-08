@@ -31,7 +31,7 @@ app.post('/generate-sql', async (req, res) => {
     });
 
     const prompt = `
-      You are a SQL expert. You have to recreate the SQL query for text provided to you by user. '''Don't include any other explanation. and reply with please send SQL query if user has sent unrelated message, input or query'''
+      Convert natural language into SQL queries. '''Do not answer to any other request instead say 'please send SQL query' and do not answer to empty message also'''
      
       User Has said:
       ${userInput}  
