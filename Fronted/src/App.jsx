@@ -3,10 +3,13 @@ import { useState } from 'react';
 const App = () => {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getResponse = async () => {
     try {
-      const response = await fetch(`https://sql-generator-w634.vercel.app/generate-sql`, {
+      setLoading(true);
+
+      const response = await fetch(`http://localhost:3000/generate-sql`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,6 +36,8 @@ const App = () => {
       setText('');
     } catch (error) {
       console.error('Error:', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,7 +60,9 @@ const App = () => {
           onChange={(e) => setText(e.target.value)}
           rows={4} // Adjust the number of rows as needed
         />
-        <button onClick={getResponse}>Send</button>
+        <button onClick={getResponse} disabled={loading}>
+          {loading ? 'Sending...' : 'Send'}
+        </button>
       </div>
     </div>
   );
