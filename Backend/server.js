@@ -5,9 +5,15 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 
+var whitelist = ['https://sql-generator-gamma.vercel.app/']
 var corsOptions = {
-  origin: 'https://sql-generator-gamma.vercel.app/',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
 }
 
 dotenv.config();
