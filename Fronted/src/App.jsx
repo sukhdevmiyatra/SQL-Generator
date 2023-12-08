@@ -4,9 +4,16 @@ const App = () => {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const getResponse = async () => {
     try {
+      // Check if the message is empty
+      if (!text.trim()) {
+        setErrorMessage('Please enter a message.');
+        return;
+      }
+
       setLoading(true);
 
       const response = await fetch(`https://sql-generator-w634.vercel.app/generate-sql`, {
@@ -34,8 +41,10 @@ const App = () => {
         },
       ]);
       setText('');
+      setErrorMessage('');
     } catch (error) {
       console.error('Error:', error.message);
+      setErrorMessage('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -60,6 +69,7 @@ const App = () => {
           onChange={(e) => setText(e.target.value)}
           rows={4} // Adjust the number of rows as needed
         />
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
         <button onClick={getResponse} disabled={loading}>
           {loading ? 'Sending...' : 'Send'}
         </button>
