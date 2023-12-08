@@ -23,7 +23,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors(corsOptions));
 
 const MODEL_NAME = 'models/text-bison-001';
 const API_KEY = process.env.API_KEY;
@@ -33,7 +33,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-app.post('/generate-sql',cors(corsOptions), async (req, res) => {
+app.post('/generate-sql', async (req, res) => {
   try {
     const userInput = req.body.userInput;
 
