@@ -31,7 +31,7 @@ app.post('/generate-sql', async (req, res) => {
     });
 
     const prompt = `
-      Convert natural language into SQL queries. '''do not answer to anything else than SQL queries instead say 'please send SQL query' '''
+      Convert natural language into SQL queries. '''do not answer to anything else than SQL queries'''
      
       User Has said:
       ${userInput}  
