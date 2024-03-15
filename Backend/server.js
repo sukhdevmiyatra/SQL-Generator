@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = new GoogleGenerativeAI(process.env.API_KEY);
 const MODEL_NAME  = genAI.getGenerativeModel({ model: "gemini-pro"});
 
 if (!API_KEY) {
