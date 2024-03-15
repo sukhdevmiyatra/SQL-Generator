@@ -1,5 +1,5 @@
 const express = require('express');
-const { TextServiceClient } = require('@google-ai/generativelanguage').v1beta2;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GoogleAuth } = require('google-auth-library');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 
-const MODEL_NAME = 'models/text-bison-001';
 const API_KEY = process.env.API_KEY;
+const MODEL_NAME  = genAI.getGenerativeModel({ model: "gemini-pro"});
 
 if (!API_KEY) {
   console.error('API_KEY is missing. Please provide a valid API key.');
