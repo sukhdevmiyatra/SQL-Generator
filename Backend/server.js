@@ -1,5 +1,6 @@
 const express = require('express');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { TextServiceClient } = require('@google-ai/generativelanguage').v1beta2;
+const { GoogleAuth } = require('google-auth-library');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -13,11 +14,10 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 
-// Initialize the GoogleGenerativeAI client with the API key
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const MODEL_NAME = 'models/text-bison-001';
+const API_KEY = process.env.API_KEY;
 
-// Verify if the API_KEY is set
-if (!process.env.API_KEY) {
+if (!API_KEY) {
   console.error('API_KEY is missing. Please provide a valid API key.');
   process.exit(1);
 }
@@ -26,8 +26,9 @@ app.post('/generate-sql', async (req, res) => {
   try {
     const userInput = req.body.userInput;
 
-    // For text-only input, use the gemini-pro model
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const client = new TextServiceClient({
+      authClient: new GoogleAuth().fromAPIKey(API_KEY),
+    });
 
     const prompt = `
       Convert natural language into SQL queries. '''do not answer to anything else than SQL queries'''
@@ -36,10 +37,14 @@ app.post('/generate-sql', async (req, res) => {
       ${userInput}  
     `;
 
-    // Generate content based on the user input
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const generatedText = await response.text();
+    const result = await client.generateText({
+      model: MODEL_NAME,
+      prompt: {
+        text: prompt,
+      },
+    });
+
+    const generatedText = result[0]?.candidates[0]?.output;
 
     if (generatedText) {
       res.json({ generatedText });
@@ -47,11 +52,11 @@ app.post('/generate-sql', async (req, res) => {
       res.status(500).json({ error: 'Failed to generate SQL code.' });
     }
   } catch (error) {
-    console.error(error); // Logging the error can help in debugging
+    
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+ 
 });
