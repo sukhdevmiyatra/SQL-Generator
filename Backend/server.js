@@ -12,7 +12,10 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(cors());
+var corsOptions = {
+  origin: 'https://sql-generator-gamma.vercel.app/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 const MODEL_NAME = 'models/text-bison-001';
 const API_KEY = process.env.API_KEY;
