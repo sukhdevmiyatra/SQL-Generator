@@ -12,9 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
-
-// CORS configuration
-app.use(cors());
+app.use(cors()); // Adding the cors middleware
 
 const API_KEY = process.env.API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
