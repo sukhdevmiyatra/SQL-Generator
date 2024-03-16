@@ -11,15 +11,5 @@
       "src": "/(.*)",
       "dest": "/server.js"
     }
-  ],
-  "headers": [
-    {
-      "source": "/generate-sql", 
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://sql-generator-gamma.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-Requested-With,Content-Type,Accept,Origin,Authorization" }
-      ]
-    }
   ]
 }
