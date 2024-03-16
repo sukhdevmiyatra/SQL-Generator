@@ -3,7 +3,6 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GoogleAuth } = require('google-auth-library');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const cors = require('cors');
 
 dotenv.config();
 
@@ -13,12 +12,13 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Define CORS options to allow requests from the frontend URL
-const corsOptions = {
-  origin: 'https://sql-generator-gamma.vercel.app',
-};
-
-app.use(cors(corsOptions));
+// CORS configuration
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://sql-generator-gamma.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 const API_KEY = process.env.API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
