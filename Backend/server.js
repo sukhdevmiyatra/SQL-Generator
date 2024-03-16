@@ -16,6 +16,13 @@ var corsOptions = {
   origin: 'https://sql-generator-gamma.vercel.app/',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
+app.get('/generate-sql', cors(corsOptions), function (req, res, next) {
+  res.json({msg: 'This is CORS-enabled for only example.com.'})
+})
+ 
+app.listen(80, function () {
+  console.log('CORS-enabled web server listening on port 80')
+})
 
 const MODEL_NAME = 'models/text-bison-001';
 const API_KEY = process.env.API_KEY;
