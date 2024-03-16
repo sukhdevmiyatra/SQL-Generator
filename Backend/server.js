@@ -1,5 +1,5 @@
 const express = require('express');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { TextServiceClient } = require('@google-ai/generativelanguage').v1beta2;
 const { GoogleAuth } = require('google-auth-library');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -12,12 +12,10 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
-
-// CORS configuration
 app.use(cors());
 
+const MODEL_NAME = 'models/gemini-pro';
 const API_KEY = process.env.API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY);
 
 if (!API_KEY) {
   console.error('API_KEY is missing. Please provide a valid API key.');
@@ -28,9 +26,9 @@ app.post('/generate-sql', async (req, res) => {
   try {
     const userInput = req.body.userInput;
 
-    const client = new GoogleAuth().fromAPIKey(API_KEY);
-
-    const MODEL_NAME = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const client = new TextServiceClient({
+      authClient: new GoogleAuth().fromAPIKey(API_KEY),
+    });
 
     const prompt = `
       Convert natural language into SQL queries. '''do not answer to anything else than SQL queries'''
@@ -54,11 +52,11 @@ app.post('/generate-sql', async (req, res) => {
       res.status(500).json({ error: 'Failed to generate SQL code.' });
     }
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+ 
 });
