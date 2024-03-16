@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 
-const MODEL_NAME = 'models/gemini-pro';
+const MODEL_NAME = 'models/text-bison-001';
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
