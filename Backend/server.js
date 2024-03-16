@@ -1,5 +1,5 @@
 const express = require('express');
-const { TextServiceClient } = require('@google-ai/generativelanguage').v1beta2;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GoogleAuth } = require('google-auth-library');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -12,20 +12,12 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
-var corsOptions = {
-  origin: 'https://sql-generator-gamma.vercel.app/',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.get('/generate-sql', cors(corsOptions), function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for only example.com.'})
-})
- 
-app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
-})
 
-const MODEL_NAME = 'models/text-bison-001';
+// CORS configuration
+app.use(cors());
+
 const API_KEY = process.env.API_KEY;
+const genAI = new GoogleGenerativeAI(API_KEY);
 
 if (!API_KEY) {
   console.error('API_KEY is missing. Please provide a valid API key.');
@@ -36,9 +28,9 @@ app.post('/generate-sql', async (req, res) => {
   try {
     const userInput = req.body.userInput;
 
-    const client = new TextServiceClient({
-      authClient: new GoogleAuth().fromAPIKey(API_KEY),
-    });
+    const client = new GoogleAuth().fromAPIKey(API_KEY);
+
+    const MODEL_NAME = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
       Convert natural language into SQL queries. '''do not answer to anything else than SQL queries'''
@@ -62,11 +54,11 @@ app.post('/generate-sql', async (req, res) => {
       res.status(500).json({ error: 'Failed to generate SQL code.' });
     }
   } catch (error) {
-    
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 app.listen(port, () => {
- 
+  console.log(`Server is running on port ${port}`);
 });
